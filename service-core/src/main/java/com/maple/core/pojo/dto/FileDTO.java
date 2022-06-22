@@ -1,4 +1,4 @@
-package com.maple.base.pojo.dto;
+package com.maple.core.pojo.dto;
 
 import lombok.Builder;
 import lombok.Data;

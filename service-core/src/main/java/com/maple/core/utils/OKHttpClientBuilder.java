@@ -1,4 +1,4 @@
-package com.maple.base.util;
+package com.maple.core.utils;
 
 import okhttp3.OkHttpClient;
 

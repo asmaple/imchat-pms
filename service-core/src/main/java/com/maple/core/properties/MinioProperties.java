@@ -1,4 +1,4 @@
-package com.maple.base.properties;
+package com.maple.core.properties;
 
 import lombok.Data;
 import org.springframework.beans.factory.InitializingBean;

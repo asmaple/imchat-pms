@@ -1,7 +1,7 @@
-package com.maple.base.config;
+package com.maple.core.config;
 
-import com.maple.base.util.CustomMinioClient;
-import com.maple.base.util.OKHttpClientBuilder;
+import com.maple.core.utils.CustomMinIoClient;
+import com.maple.core.utils.OKHttpClientBuilder;
 import io.minio.MinioClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
@@ -42,7 +42,7 @@ public class MinIoClientConfig {
     }
 
     @Bean
-    public CustomMinioClient customMinioClient() {
-        return new CustomMinioClient(minioClient());
+    public CustomMinIoClient customMinIoClient() {
+        return new CustomMinIoClient(minioClient());
     }
 }

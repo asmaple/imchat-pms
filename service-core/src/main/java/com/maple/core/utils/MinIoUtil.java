@@ -1,9 +1,9 @@
-package com.maple.base.util;
+package com.maple.core.utils;
 
 import cn.hutool.core.io.IoUtil;
 import com.maple.base.enums.PolicyType;
-import com.maple.base.pojo.dto.FileDTO;
-import com.maple.base.properties.MinioProperties;
+import com.maple.core.pojo.dto.FileDTO;
+import com.maple.core.properties.MinioProperties;
 import io.minio.*;
 import io.minio.http.Method;
 import io.minio.messages.Bucket;
@@ -12,7 +12,6 @@ import io.minio.messages.DeleteObject;
 import io.minio.messages.Item;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,32 +24,30 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-@Component
 @Slf4j
-public class MinioUtil {
-
+public class MinIoUtil {
     public static final String SEPARATOR = "/";
 
 
     @Resource
-    private CustomMinioClient customMinioClient;
-
+    private CustomMinIoClient customMinIoClient;
+    
     public boolean bucketExists(String bucketName) throws Exception {
         if (StringUtils.isEmpty(bucketName)) {
             return false;
         }
-        boolean isExists = customMinioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
+        boolean isExists = customMinIoClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
         if (isExists) {
             return true;
         }
         try {
-            customMinioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
+            customMinIoClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
             //创建存储桶并设置策略
             SetBucketPolicyArgs setBucketPolicyArgs = SetBucketPolicyArgs.builder()
                     .bucket(bucketName)
                     .config(getPolicy(bucketName, PolicyType.READ))
                     .build();
-            customMinioClient.setBucketPolicy(setBucketPolicyArgs);
+            customMinIoClient.setBucketPolicy(setBucketPolicyArgs);
         } catch (Exception e) {
             e.getStackTrace();
             return false;
@@ -77,7 +74,7 @@ public class MinioUtil {
                 .object(objectName)
                 .contentType(fileType)
                 .stream(file.getInputStream(), file.getSize(), ObjectWriteArgs.MIN_MULTIPART_SIZE).build();
-        customMinioClient.putObject(objectArgs);
+        customMinIoClient.putObject(objectArgs);
         return FileDTO.builder().bucketName(bucketName)
                 .objectName(objectName)
                 .originalFilename(fileName)
@@ -93,26 +90,26 @@ public class MinioUtil {
      * 从bucket获取指定对象的输入流，后续可使用输入流读取对象
      * getObject与minio server连接默认保持5分钟，
      * 每隔15s由minio server向客户端发送keep-alive check，5分钟后由客户端主动发起关闭连接
-     * */
-    public InputStream getObject(String bucketName, String objectName) throws Exception{
+     */
+    public InputStream getObject(String bucketName, String objectName) throws Exception {
         GetObjectArgs args = GetObjectArgs.builder()
                 .bucket(bucketName)
                 .object(objectName)
                 .build();
-        return customMinioClient.getObject(args);
+        return customMinIoClient.getObject(args);
     }
 
     /**
      * 获取对象的临时访问url，有效期5分钟
-     * */
-    public String getObjectURL(String bucketName, String objectName) throws Exception{
+     */
+    public String getObjectURL(String bucketName, String objectName) throws Exception {
         GetPresignedObjectUrlArgs args = GetPresignedObjectUrlArgs.builder()
                 .bucket(bucketName)
                 .object(objectName)
                 .expiry(5, TimeUnit.MINUTES)
                 .method(Method.GET)
                 .build();
-        return customMinioClient.getPresignedObjectUrl(args);
+        return customMinIoClient.getPresignedObjectUrl(args);
     }
 
     /**
@@ -122,7 +119,7 @@ public class MinioUtil {
         GetObjectArgs objectArgs = GetObjectArgs.builder().bucket(bucketName)
                 .object(fileName).build();
         OutputStream outputStream = null;
-        try (GetObjectResponse response = customMinioClient.getObject(objectArgs)) {
+        try (GetObjectResponse response = customMinIoClient.getObject(objectArgs)) {
             outputStream = httpServletResponse.getOutputStream();
             StreamUtils.copy(response, outputStream);
             httpServletResponse.setCharacterEncoding("utf-8");
@@ -144,17 +141,18 @@ public class MinioUtil {
      * @param bucketName bucket名称
      */
     public Optional<Bucket> getBucket(String bucketName) throws Exception {
-        return customMinioClient.listBuckets().stream().filter(b -> b.name().equals(bucketName)).findFirst();
+        return customMinIoClient.listBuckets().stream().filter(b -> b.name().equals(bucketName)).findFirst();
     }
 
     /**
      * 查看桶策略
+     *
      * @param bucketName
      * @return
      * @throws Exception
      */
-    public String getBucketPolicy(String bucketName) throws Exception{
-        return customMinioClient.getBucketPolicy(GetBucketPolicyArgs.builder().bucket(bucketName).build());
+    public String getBucketPolicy(String bucketName) throws Exception {
+        return customMinIoClient.getBucketPolicy(GetBucketPolicyArgs.builder().bucket(bucketName).build());
     }
 
     /**
@@ -163,7 +161,7 @@ public class MinioUtil {
      * https://docs.minio.io/cn/java-client-api-reference.html#listBuckets
      */
     public List<Bucket> getAllBuckets() throws Exception {
-        return customMinioClient.listBuckets();
+        return customMinIoClient.listBuckets();
     }
 
     /**
@@ -173,14 +171,14 @@ public class MinioUtil {
      */
     public void removeBucket(String bucketName) throws Exception {
         // 递归列举某个bucket下的所有文件，然后循环删除
-        Iterable<Result<Item>> iterable = customMinioClient.listObjects(ListObjectsArgs.builder()
+        Iterable<Result<Item>> iterable = customMinIoClient.listObjects(ListObjectsArgs.builder()
                 .bucket(bucketName)
                 .recursive(true)
                 .build());
         for (Result<Item> itemResult : iterable) {
-            removeObject(bucketName,itemResult.get().objectName());
+            removeObject(bucketName, itemResult.get().objectName());
         }
-        customMinioClient.removeBucket(RemoveBucketArgs.builder().bucket(bucketName).build());
+        customMinIoClient.removeBucket(RemoveBucketArgs.builder().bucket(bucketName).build());
     }
 
     /**
@@ -190,7 +188,7 @@ public class MinioUtil {
      * @param objectName 文件名称
      */
     public void removeObject(String bucketName, String objectName) throws Exception {
-        customMinioClient.removeObject(RemoveObjectArgs.builder().bucket(bucketName).object(objectName).build());
+        customMinIoClient.removeObject(RemoveObjectArgs.builder().bucket(bucketName).object(objectName).build());
     }
 
     /**
@@ -205,7 +203,7 @@ public class MinioUtil {
         keys.forEach(s -> {
             objects.add(new DeleteObject(s));
         });
-        return customMinioClient.removeObjects(
+        return customMinIoClient.removeObjects(
                 RemoveObjectsArgs.builder().bucket(bucketName).objects(objects).build());
     }
 

@@ -1,4 +1,4 @@
-package com.maple.base.util;
+package com.maple.core.utils;
 
 import com.google.common.collect.Multimap;
 import io.minio.CreateMultipartUploadResponse;
@@ -7,20 +7,16 @@ import io.minio.MinioClient;
 import io.minio.ObjectWriteResponse;
 import io.minio.errors.*;
 import io.minio.messages.Part;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
-
 /**
  * 自定义minio
  */
-public class CustomMinioClient extends MinioClient {
-
-    public CustomMinioClient(MinioClient client) {
+public class CustomMinIoClient extends MinioClient{
+    public CustomMinIoClient(MinioClient client) {
         super(client);
     }
 

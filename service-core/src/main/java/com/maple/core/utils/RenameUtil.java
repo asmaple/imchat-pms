@@ -1,4 +1,4 @@
-package com.maple.base.util;
+package com.maple.core.utils;
 
 import cn.hutool.core.util.RandomUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ public class RenameUtil {
         if (StringUtils.isBlank(renameFile)) {
             throw new Exception("文件名为空");
         }
-        return LocalDateTime.now().format(dateTimeFormatter) + MinioUtil.SEPARATOR + renameFile;
+        return LocalDateTime.now().format(dateTimeFormatter) + MinIoUtil.SEPARATOR + renameFile;
     }
 
 
