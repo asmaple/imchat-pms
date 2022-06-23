@@ -25,18 +25,22 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public boolean registerInfo(Long id) {
+    public boolean registerInfo(Long userId) {
         //判断用户是否已被注册
-        log.info("用户id---->>>{}",id);
-        QueryWrapper<UserInfo> userInfoQueryWrapper = new QueryWrapper<>();
-        userInfoQueryWrapper.eq("user_id", id);
-        Integer count = baseMapper.selectCount(userInfoQueryWrapper);
-        Assert.isTrue(count == 0, ResponseEnum.ACCOUNT_EXIST_ERROR);
+        log.info("用户userId---->>>{}",userId);
+//        QueryWrapper<UserInfo> userInfoQueryWrapper = new QueryWrapper<>();
+//        userInfoQueryWrapper.eq("user_id", id);
+//        Integer count = baseMapper.selectCount(userInfoQueryWrapper);
+//        Assert.isTrue(count == 0, ResponseEnum.ACCOUNT_EXIST_ERROR);
+
+        UserInfo userInfo = baseMapper.selectById(userId);
+        // 如果用户存在 则抛出异常 用户已存在
+        Assert.isNull(userInfo,ResponseEnum.ACCOUNT_EXIST_ERROR);
 
         //插入用户信息记录：user_info
-        UserInfo userInfo = new UserInfo();
-        userInfo.setUserId(id);
-        int insert = baseMapper.insert(userInfo);
+        UserInfo newUserInfo = new UserInfo();
+        newUserInfo.setUserId(userId);
+        int insert = baseMapper.insert(newUserInfo);
         return insert > 0;
     }
 }

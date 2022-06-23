@@ -1,8 +1,10 @@
 package com.maple.core.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.maple.base.util.JwtUtils;
 import com.maple.common.exception.Assert;
+import com.maple.common.result.R;
 import com.maple.common.result.ResponseEnum;
 import com.maple.common.util.MD5;
 import com.maple.core.pojo.dto.UserInfoDTO;
@@ -15,6 +17,7 @@ import com.maple.core.service.UserLoginRecordService;
 import com.maple.core.service.UserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

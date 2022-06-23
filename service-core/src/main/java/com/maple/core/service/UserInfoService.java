@@ -13,5 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface UserInfoService extends IService<UserInfo> {
 
-    boolean registerInfo(Long id);
+    boolean registerInfo(Long userId);
 }

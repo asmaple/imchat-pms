@@ -21,20 +21,20 @@ import org.springframework.stereotype.Service;
 public class UserLoginRecordServiceImpl extends ServiceImpl<UserLoginRecordMapper, UserLoginRecord> implements UserLoginRecordService {
 
     @Override
-    public UserLoginRecord getLastLoginRecord(Long id) {
-        log.info("登录记录--userId-->{}",id);
+    public UserLoginRecord getLastLoginRecord(Long userId) {
+        log.info("登录记录--userId-->{}",userId);
         QueryWrapper<UserLoginRecord> userLoginRecordQueryWrapper = new QueryWrapper<>();
-        userLoginRecordQueryWrapper.eq("user_id", id)
+        userLoginRecordQueryWrapper.eq("user_id", userId)
                 .orderByDesc("id")
                 .last("limit 1");
         return baseMapper.selectOne(userLoginRecordQueryWrapper);
     }
 
     @Override
-    public boolean saveLoginRecord(Long id, String ip) {
+    public boolean saveLoginRecord(Long userId, String ip) {
         //记录登录日志
         UserLoginRecord userLoginRecord = new UserLoginRecord();
-        userLoginRecord.setUserId(id);
+        userLoginRecord.setUserId(userId);
         userLoginRecord.setIp(ip);
         int count = baseMapper.insert(userLoginRecord);
         return count > 0;

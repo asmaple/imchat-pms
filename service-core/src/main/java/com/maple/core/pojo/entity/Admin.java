@@ -22,6 +22,10 @@ import lombok.EqualsAndHashCode;
 @ApiModel(value="Admin对象", description="管理系统用户")
 public class Admin implements Serializable {
 
+    // 用户状态
+    public static  final Integer STATUS_NORMAL = 0; // 正常
+    public static  final Integer STATUS_LOCKED = 1; // 锁定
+
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "id")
