@@ -13,4 +13,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface UserLoginRecordService extends IService<UserLoginRecord> {
 
+    UserLoginRecord getLastLoginRecord(Long id);
+
+    boolean saveLoginRecord(Long id, String ip);
 }

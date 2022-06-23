@@ -23,6 +23,12 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value="User对象", description="客户端用户")
 public class User implements Serializable {
+    // 用户状态
+    public static  final Integer STATUS_NORMAL = 0; // 正常
+    public static  final Integer STATUS_LOCKED = 1; // 锁定
+
+    public static final String SIGN_VALUE = "maple";
+    public static final String NICKNAME_VALUE = "maple会员";
 
     private static final long serialVersionUID = 1L;
 
