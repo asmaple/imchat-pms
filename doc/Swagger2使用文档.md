@@ -1,5 +1,6 @@
 ## 访问地址（固定地址）
-http://localhost:8110/swagger-ui.html
+# http://localhost:8090/swagger-ui.html
+http://localhost:8090/doc.html#/home
 ## 配置
 @Configuration
 @EnableSwagger2
