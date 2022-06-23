@@ -1,6 +1,9 @@
 package com.maple.core.controller.api;
 
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.maple.base.pojo.to.UserClaims;
+import com.maple.base.util.JwtUtils;
 import com.maple.common.exception.Assert;
 import com.maple.common.result.R;
 import com.maple.common.result.ResponseEnum;
@@ -13,7 +16,9 @@ import com.maple.core.service.UserInfoService;
 import com.maple.core.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -106,7 +111,64 @@ public class UserController {
         }
     }
 
+    @ApiOperation("刷新令牌")
+    @GetMapping("/refreshToken/{userId}/{userName}")
+    public R refreshToken(
+            @ApiParam(value = "用户ID", required = true)
+            @PathVariable String userId,
+            @ApiParam(value = "用户账号", required = true)
+            @PathVariable String userName,HttpServletRequest request) {
+        Assert.notEmpty(userId, ResponseEnum.AUTH_FAIL);
+        Assert.notEmpty(userName, ResponseEnum.AUTH_FAIL);
 
+        String token = request.getHeader("token");
+        Assert.notEmpty(token, ResponseEnum.AUTH_FAIL);
+
+        UserClaims userClaims = JwtUtils.getUserClaims(token);
+        Assert.notNull(userClaims, ResponseEnum.AUTH_FAIL);
+
+        log.info("---userId-1->{}",userId);
+        log.info("---userName-1->{}",userName);
+
+        log.info("---userId-2->{}",userClaims.getUserId());
+        log.info("---userName-2->{}",userClaims.getUserName());
+
+        Assert.equals(userId,userClaims.getUserId().toString(),ResponseEnum.AUTH_FAIL);
+        Assert.equals(userName,userClaims.getUserName(),ResponseEnum.AUTH_FAIL);
+
+        String newToken = JwtUtils.createToken(userClaims.getUserId(),userClaims.getUserName());
+        if(!StringUtils.isEmpty(newToken)) {
+            return R.ok().data("token",token);
+        }
+        return R.error();
+    }
+
+    @ApiOperation("锁定和解锁用户")
+    @PostMapping("/lockUser/{status}")
+    public R lockUser(
+            @ApiParam(value = "用户状态(0:解锁,1:锁定)", required = true)
+            @PathVariable String status, HttpServletRequest request) {
+        Assert.notEmpty(status, ResponseEnum.PARAMETER_ERROR);
+
+        //获取当前登录用户的id
+        String token = request.getHeader("token");
+        Long userId = JwtUtils.getUserId(token);
+        log.info("----lockUser--->>>{}",userId);
+//        User user = userService.getUser(userId);
+
+        if(StringUtils.equals(status,"0") || StringUtils.equals(status,"1")) {
+            UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
+            // 只更新部分字段
+            updateWrapper
+                    .eq("id",userId)
+                    .set("status",Integer.valueOf(status));
+            boolean result =  userService.update(null,updateWrapper);
+            if(result) {
+                return R.ok().message(StringUtils.equals(status,"1")? "锁定成功！" : "解锁成功！");
+            }
+        }
+        return R.error();
+    }
 
     @ApiOperation("用户退出")
     @PostMapping("/logout")
