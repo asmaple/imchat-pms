@@ -19,7 +19,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.annotations.Delete;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -119,6 +118,7 @@ public class UserController {
             @PathVariable String userId,
             @ApiParam(value = "用户账号", required = true)
             @PathVariable String userName,HttpServletRequest request) {
+
         Assert.notEmpty(userId, ResponseEnum.AUTH_FAIL);
         Assert.notEmpty(userName, ResponseEnum.AUTH_FAIL);
 
@@ -139,7 +139,7 @@ public class UserController {
 
         String newToken = JwtUtils.createToken(userClaims.getUserId(),userClaims.getUserName());
         if(!StringUtils.isEmpty(newToken)) {
-            return R.ok().data("token",token);
+            return R.ok().data("token",newToken);
         }
         return R.error();
     }

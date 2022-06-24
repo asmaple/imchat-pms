@@ -4,6 +4,7 @@ import com.maple.base.pojo.to.UserClaims;
 import com.maple.common.exception.BusinessException;
 import com.maple.common.result.ResponseEnum;
 import io.jsonwebtoken.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -11,10 +12,11 @@ import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
 import java.util.Date;
 
+@Slf4j
 public class JwtUtils {
 
-//    private static long tokenExpiration = 24 * 60 * 60 * 1000;
-    private static long tokenExpiration = 1000;
+    private static long tokenExpiration = 24 * 60 * 60 * 1000;
+//    private static long tokenExpiration = 1000;
     private static String tokenSignKey = "A1t2g3uigu123456";
 
     private static Key getKeyInstance(){
@@ -65,6 +67,7 @@ public class JwtUtils {
     }
 
     public static UserClaims getUserClaims(String token) {
+        log.info("token====>{}",token);
         Claims claims = getClaims(token);
         Integer userId = (Integer)claims.get("userId");
         String userName = (String)claims.get("userName");
@@ -97,6 +100,7 @@ public class JwtUtils {
             Claims claims = claimsJws.getBody();
             return claims;
         } catch (Exception e) {
+            log.info("=====Claims==Exception===>>>>{}",e.getMessage());
             throw new BusinessException(ResponseEnum.AUTH_FAIL);
         }
     }
