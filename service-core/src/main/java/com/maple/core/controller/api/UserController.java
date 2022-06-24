@@ -144,33 +144,6 @@ public class UserController {
         return R.error();
     }
 
-    @ApiOperation("锁定和解锁用户")
-    @PostMapping("/lockUser/{status}")
-    public R lockUser(
-            @ApiParam(value = "用户状态(0:解锁,1:锁定)", required = true)
-            @PathVariable String status, HttpServletRequest request) {
-        Assert.notEmpty(status, ResponseEnum.PARAMETER_ERROR);
-
-        //获取当前登录用户的id
-        String token = request.getHeader("token");
-        Long userId = JwtUtils.getUserId(token);
-        log.info("----lockUser--->>>{}",userId);
-//        User user = userService.getUser(userId);
-
-        if(StringUtils.equals(status,"0") || StringUtils.equals(status,"1")) {
-            UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
-            // 只更新部分字段
-            updateWrapper
-                    .eq("id",userId)
-                    .set("status",Integer.valueOf(status));
-            boolean result =  userService.update(null,updateWrapper);
-            if(result) {
-                return R.ok().message(StringUtils.equals(status,"1")? "锁定成功！" : "解锁成功！");
-            }
-        }
-        return R.error();
-    }
-
 
     @ApiOperation("用户退出")
     @PostMapping("/logout")

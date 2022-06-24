@@ -20,6 +20,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Delete;
 import org.springframework.web.bind.annotation.*;
 
@@ -110,6 +111,51 @@ public class AdminController {
         }
     }
 
+
+    @ApiOperation("锁定和解锁用户")
+    @PostMapping("/lockUser/{status}")
+    public R lockUser(
+            @ApiParam(value = "用户ID", required = true)
+            @PathVariable String userId,
+            @ApiParam(value = "用户状态(0:解锁,1:锁定)", required = true)
+            @PathVariable String status, HttpServletRequest request) {
+
+        Assert.notEmpty(userId, ResponseEnum.PARAMETER_ERROR);
+        Assert.notEmpty(status, ResponseEnum.PARAMETER_ERROR);
+
+        //获取当前登录用户的id
+        String token = request.getHeader("token");
+        Long mUserId = JwtUtils.getUserId(token);
+        log.info("----lockUser--->>>{}",mUserId);
+        Admin admin = adminService.getById(mUserId);
+        Assert.notNull(admin,ResponseEnum.ACCOUNT_NOT_FOUNT);
+
+        // 用户被锁定
+        Assert.equals(admin.getStatus(), User.STATUS_NORMAL, ResponseEnum.LOGIN_LOKED_ERROR);
+
+
+        if(StringUtils.equals(status,"0") || StringUtils.equals(status,"1")) {
+            UpdateWrapper<Admin> updateWrapper = new UpdateWrapper<>();
+            // 只更新部分字段
+            updateWrapper
+                    .eq("id",userId)
+                    .set("status",Integer.valueOf(status));
+            boolean result =  adminService.update(null,updateWrapper);
+            if(result) {
+                return R.ok().message(StringUtils.equals(status,"1")? "锁定成功！" : "解锁成功！");
+            }
+        }
+        return R.error();
+    }
+
+
+    @ApiOperation("用户退出")
+    @PostMapping("/logout")
+    public R logout() {
+        return R.ok();
+    }
+
+
     @ApiOperation("删除用户")
     @PostMapping("/deleteUserById/{userId}")
     public R deleteUserById(
@@ -123,16 +169,10 @@ public class AdminController {
         Admin admin = adminService.getById(adminUserId);
         Assert.notNull(admin, ResponseEnum.ACCOUNT_NOT_FOUNT);
 
-        if(admin.getStatus().intValue() == Admin.STATUS_LOCKED.intValue()) {
-            return R.error().message("您的账号已被锁定,无法操作！");
-        }
-
-        if(admin.getRoleCode().intValue() == Admin.ROLE_USER.intValue()){
-            return R.error().message("您是普通账号,无法操作！");
-        }
-
-//        User user = userService.getById(userId);
-//        Assert.notNull(user, ResponseEnum.ACCOUNT_NOT_FOUNT);
+        // 账号被锁定
+        Assert.equals(admin.getStatus(), Admin.STATUS_NORMAL, ResponseEnum.LOGIN_LOKED_ERROR);
+        // 无权限
+        Assert.isTrue((admin.getRoleCode().intValue() == Admin.ROLE_ADMIN.intValue() || admin.getRoleCode().intValue() == Admin.ROLE_ROOT.intValue()), ResponseEnum.ROLE_NOT_PERMISSION);
 
         UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
         // 只更新部分字段

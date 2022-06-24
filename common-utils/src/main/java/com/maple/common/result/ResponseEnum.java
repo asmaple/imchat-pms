@@ -27,7 +27,8 @@ public enum ResponseEnum {
     EMAIL_ERROR(-205, "邮箱格式错误"),
     PHONE_ERROR(-206, "手机号格式错误"),
     PASSWORD_ERROR(-207, "密码格式错误"),
-    LOGIN_LOKED_ERROR(-299, "用户被锁定"),
+    LOGIN_LOKED_ERROR(-208, "您的账号被锁定,无法操作！"),
+    ROLE_NOT_PERMISSION(-209, "您的账号暂无权限,无法操作！"),
 
     AUTH_FAIL(-401, "请重新登陆"),
 
