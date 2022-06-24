@@ -103,6 +103,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         //组装UserInfoDTO
         UserInfoDTO userInfoDTO = new UserInfoDTO();
         userInfoDTO.setToken(token);
+        userInfoDTO.setUserId(user.getId().toString());
         userInfoDTO.setUsername(user.getUsername());
         userInfoDTO.setNickname(user.getNickname());
         userInfoDTO.setPhone(user.getPhone());

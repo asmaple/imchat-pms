@@ -8,6 +8,9 @@ import lombok.Data;
 @ApiModel(description="用户信息对象")
 public class UserInfoDTO {
 
+    @ApiModelProperty(value = "用户ID")
+    private String userId;
+
     @ApiModelProperty(value = "用户名")
     private String username;
 

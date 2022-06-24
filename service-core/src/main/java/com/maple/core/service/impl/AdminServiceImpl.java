@@ -95,6 +95,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
 
         //组装AdminDTO
         AdminDTO adminDTO = new AdminDTO();
+        adminDTO.setUserId(admin.getId().toString());
         adminDTO.setToken(token);
         adminDTO.setUsername(admin.getUsername());
         adminDTO.setPhone(admin.getPhone());
