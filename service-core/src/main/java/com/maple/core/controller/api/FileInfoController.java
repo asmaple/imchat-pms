@@ -1,6 +1,8 @@
-package com.maple.core.controller;
+package com.maple.core.controller.api;
 
 
+import io.swagger.annotations.Api;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
@@ -13,9 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
  * @author ggq
  * @since 2022-06-22
  */
+@Api(tags = "文件接口")
 @RestController
-@RequestMapping("/fileInfo")
+@RequestMapping("/api/core/fileInfo")
+@Slf4j
 public class FileInfoController {
+
+
 
 }
 

@@ -26,6 +26,12 @@ public class Admin implements Serializable {
     public static  final Integer STATUS_NORMAL = 0; // 正常
     public static  final Integer STATUS_LOCKED = 1; // 锁定
 
+    public static final String SIGN_VALUE = "maple";
+
+    public static final Integer ROLE_USER = 0;
+    public static final Integer ROLE_ADMIN = 1;
+    public static final Integer ROLE_ROOT = 99;
+
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "id")
