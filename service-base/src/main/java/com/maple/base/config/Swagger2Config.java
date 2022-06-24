@@ -31,7 +31,7 @@ public class Swagger2Config {
 
     private ApiInfo adminApiInfo(){
         return new ApiInfoBuilder()
-                .title("Reggie后台管理系统API文档")
+                .title("IM-Chat后台管理系统API文档")
                 .description("档描述了接口的调用方式")
                 .version("1.0")
                 .contact(new Contact("gaoguanqi", "https://github.com/gaoguanqi", "307590625@qq.com.com"))
@@ -51,7 +51,7 @@ public class Swagger2Config {
 
     private ApiInfo webApiInfo(){
         return new ApiInfoBuilder()
-                .title("Reggie移动端API文档")
+                .title("IM-Chat移动端API文档")
                 .description("文档描述接口的调用方式")
                 .version("1.0")
                 .contact(new Contact("gaoguanqi", "https://github.com/gaoguanqi", "307590625@qq.com.com"))

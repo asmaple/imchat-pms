@@ -171,32 +171,6 @@ public class UserController {
         return R.error();
     }
 
-//
-//    @ApiOperation("删除用户")
-//    @Delete("/deleteUserById")
-//    public R deleteUserById(
-//            @ApiParam(value = "用户Id", required = true)
-//            @PathVariable String userId,
-//            HttpServletRequest request){
-//        //获取当前登录用户的id
-//        String token = request.getHeader("token");
-//        Long currentUserId = JwtUtils.getUserId(token);
-//        User user = userService.getById(currentUserId);
-//        Assert.notNull(user,ResponseEnum.ACCOUNT_NOT_FOUNT);
-//        if(user.get)
-//
-//
-//        UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
-//        // 只更新部分字段
-//        updateWrapper
-//                .eq("id",userId)
-//                .set("is_deleted",1);
-//        boolean result =  userService.update(null,updateWrapper);
-//        if(result) {
-//            return R.ok().message("删除成功！");
-//        }
-//        return R.error().message("删除失败！");
-//    }
 
     @ApiOperation("用户退出")
     @PostMapping("/logout")
