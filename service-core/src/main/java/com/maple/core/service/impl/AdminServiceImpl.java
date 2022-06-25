@@ -1,6 +1,9 @@
 package com.maple.core.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.maple.base.util.JwtUtils;
 import com.maple.common.exception.Assert;
 import com.maple.common.result.ResponseEnum;
@@ -106,5 +109,20 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         }
         //返回
         return adminDTO;
+    }
+
+    @Override
+    public IPage<Admin> listPage(Page<Admin> pageParam, String keyword) {
+        if(StringUtils.isBlank(keyword)){
+            return baseMapper.selectPage(pageParam, null);
+        }
+
+        QueryWrapper<Admin> queryWrapper = new QueryWrapper<>();
+        queryWrapper
+                .like("username", keyword)
+                .or()
+                .like("phone", keyword)
+                .orderByDesc("id");
+        return baseMapper.selectPage(pageParam, queryWrapper);
     }
 }

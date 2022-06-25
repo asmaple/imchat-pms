@@ -3,6 +3,8 @@ package com.maple.core.controller.admin;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.maple.base.util.JwtUtils;
 import com.maple.common.exception.Assert;
 import com.maple.common.result.R;
@@ -16,6 +18,7 @@ import com.maple.core.pojo.vo.LoginVO;
 import com.maple.core.pojo.vo.RegisterVO;
 import com.maple.core.service.AdminService;
 import com.maple.core.service.UserService;
+import com.maple.core.utils.PageUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -111,6 +114,40 @@ public class AdminController {
         }
     }
 
+    @ApiOperation("查询用户列表")
+    @GetMapping("/userList/{page}/{limit}")
+    public R getUserList(
+            @ApiParam(value = "当前页码", required = true)
+            @PathVariable Long page,
+
+            @ApiParam(value = "每页记录数", required = true)
+            @PathVariable Long limit,
+
+            @ApiParam(value = "查询关键字", required = false)
+            @RequestParam String keyword){
+
+        Page<User> pageParam = new Page<>(page, limit);
+        IPage<User> pageModel =  userService.listPage(pageParam, keyword);
+        return PageUtils.page(pageModel);
+    }
+
+    @ApiOperation("查询管理员列表")
+    @GetMapping("/adminList/{page}/{limit}")
+    public R getAdminList(
+            @ApiParam(value = "当前页码", required = true)
+            @PathVariable Long page,
+
+            @ApiParam(value = "每页记录数", required = true)
+            @PathVariable Long limit,
+
+            @ApiParam(value = "查询关键字", required = false)
+            @RequestParam String keyword){
+
+        Page<Admin> pageParam = new Page<>(page, limit);
+        IPage<Admin> pageModel =  adminService.listPage(pageParam, keyword);
+        return PageUtils.page(pageModel);
+    }
+
 
     @ApiOperation("锁定和解锁用户")
     @PostMapping("/lockUser/{userId}/{status}")
@@ -148,11 +185,6 @@ public class AdminController {
     }
 
 
-    @ApiOperation("用户退出")
-    @PostMapping("/logout")
-    public R logout() {
-        return R.ok();
-    }
 
 
     @ApiOperation("删除用户")
@@ -181,5 +213,10 @@ public class AdminController {
         return R.error().message("删除失败！");
     }
 
+    @ApiOperation("用户退出")
+    @PostMapping("/logout")
+    public R logout() {
+        return R.ok();
+    }
 }
 

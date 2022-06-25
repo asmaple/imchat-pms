@@ -2,6 +2,9 @@ package com.maple.core.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.maple.base.util.JwtUtils;
 import com.maple.common.exception.Assert;
 import com.maple.common.result.R;
@@ -17,7 +20,6 @@ import com.maple.core.service.UserLoginRecordService;
 import com.maple.core.service.UserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -116,5 +118,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         //返回
         return userInfoDTO;
+    }
+
+    @Override
+    public IPage<User> listPage(Page<User> pageParam, String keyword) {
+        if(StringUtils.isBlank(keyword)){
+            return baseMapper.selectPage(pageParam, null);
+        }
+
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper
+                .like("username", keyword)
+                .or()
+                .like("phone", keyword)
+                .orderByDesc("id");
+        return baseMapper.selectPage(pageParam, queryWrapper);
     }
 }

@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.*;
 
 import java.time.LocalDateTime;
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -20,6 +22,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value="User对象", description="客户端用户")
+@JsonIgnoreProperties({"password","deleted","updateTime","token","openid","sign"}) // 指定 response 中忽略的字段
 public class User implements Serializable {
     // 用户状态
     public static  final Integer STATUS_NORMAL = 0; // 正常

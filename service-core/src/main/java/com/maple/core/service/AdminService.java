@@ -1,5 +1,7 @@
 package com.maple.core.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.maple.core.pojo.dto.AdminDTO;
 import com.maple.core.pojo.entity.Admin;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -20,4 +22,5 @@ public interface AdminService extends IService<Admin> {
 
     AdminDTO login(LoginVO loginVO, String ip);
 
+    IPage<Admin> listPage(Page<Admin> pageParam, String keyword);
 }
