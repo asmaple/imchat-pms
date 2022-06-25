@@ -113,7 +113,7 @@ public class AdminController {
 
 
     @ApiOperation("锁定和解锁用户")
-    @PostMapping("/lockUser/{status}")
+    @PostMapping("/lockUser/{userId}/{status}")
     public R lockUser(
             @ApiParam(value = "用户ID", required = true)
             @PathVariable String userId,
@@ -133,14 +133,13 @@ public class AdminController {
         // 用户被锁定
         Assert.equals(admin.getStatus(), User.STATUS_NORMAL, ResponseEnum.LOGIN_LOKED_ERROR);
 
-
         if(StringUtils.equals(status,"0") || StringUtils.equals(status,"1")) {
-            UpdateWrapper<Admin> updateWrapper = new UpdateWrapper<>();
+            UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
             // 只更新部分字段
             updateWrapper
                     .eq("id",userId)
                     .set("status",Integer.valueOf(status));
-            boolean result =  adminService.update(null,updateWrapper);
+            boolean result =  userService.update(null,updateWrapper);
             if(result) {
                 return R.ok().message(StringUtils.equals(status,"1")? "锁定成功！" : "解锁成功！");
             }
@@ -163,6 +162,7 @@ public class AdminController {
             @PathVariable String userId,
             HttpServletRequest request){
 
+        Assert.notEmpty(userId, ResponseEnum.PARAMETER_ERROR);
         //获取当前登录用户的id
         String token = request.getHeader("token");
         Long adminUserId = JwtUtils.getUserId(token);
@@ -173,14 +173,8 @@ public class AdminController {
         Assert.equals(admin.getStatus(), Admin.STATUS_NORMAL, ResponseEnum.LOGIN_LOKED_ERROR);
         // 无权限
         Assert.isTrue((admin.getRoleCode().intValue() == Admin.ROLE_ADMIN.intValue() || admin.getRoleCode().intValue() == Admin.ROLE_ROOT.intValue()), ResponseEnum.ROLE_NOT_PERMISSION);
-
-        UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
-        // 只更新部分字段
-        updateWrapper
-                .eq("id",userId)
-                .set("is_deleted",true);
-
-        boolean result =  userService.update(null,updateWrapper);
+        // 删除 用户
+        boolean result = userService.removeById(userId);
         if(result) {
             return R.ok().message("删除成功！");
         }
