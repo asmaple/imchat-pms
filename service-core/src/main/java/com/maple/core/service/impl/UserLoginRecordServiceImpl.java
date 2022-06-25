@@ -1,6 +1,9 @@
 package com.maple.core.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.maple.core.pojo.entity.UserLoginRecord;
 import com.maple.core.mapper.UserLoginRecordMapper;
 import com.maple.core.service.UserLoginRecordService;
@@ -31,12 +34,29 @@ public class UserLoginRecordServiceImpl extends ServiceImpl<UserLoginRecordMappe
     }
 
     @Override
-    public boolean saveLoginRecord(Long userId, String ip) {
+    public boolean saveLoginRecord(Long userId, String username, String phone, String ip) {
         //记录登录日志
         UserLoginRecord userLoginRecord = new UserLoginRecord();
         userLoginRecord.setUserId(userId);
+        userLoginRecord.setUsername(username);
+        userLoginRecord.setPhone(phone);
         userLoginRecord.setIp(ip);
         int count = baseMapper.insert(userLoginRecord);
         return count > 0;
+    }
+
+    @Override
+    public IPage<UserLoginRecord> listPage(Page<UserLoginRecord> pageParam, String keyword) {
+        if(StringUtils.isBlank(keyword)){
+            return baseMapper.selectPage(pageParam, null);
+        }
+
+        QueryWrapper<UserLoginRecord> queryWrapper = new QueryWrapper<>();
+        queryWrapper
+                .like("username", keyword)
+                .or()
+                .like("phone", keyword)
+                .orderByDesc("id");
+        return baseMapper.selectPage(pageParam, queryWrapper);
     }
 }

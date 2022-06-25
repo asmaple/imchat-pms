@@ -1,5 +1,7 @@
 package com.maple.core.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.maple.core.pojo.entity.UserLoginRecord;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -15,5 +17,7 @@ public interface UserLoginRecordService extends IService<UserLoginRecord> {
 
     UserLoginRecord getLastLoginRecord(Long userId);
 
-    boolean saveLoginRecord(Long userId, String ip);
+    boolean saveLoginRecord(Long userId, String username, String phone, String ip);
+
+    IPage<UserLoginRecord> listPage(Page<UserLoginRecord> pageParam, String keyword);
 }

@@ -34,6 +34,12 @@ public class UserLoginRecord implements Serializable {
     @ApiModelProperty(value = "用户id")
     private Long userId;
 
+    @ApiModelProperty(value = "用户名")
+    private String username;
+
+    @ApiModelProperty(value = "手机号")
+    private String phone;
+
     @ApiModelProperty(value = "登录IP")
     private String ip;
 

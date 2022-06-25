@@ -9,7 +9,6 @@ import com.maple.common.exception.Assert;
 import com.maple.common.result.ResponseEnum;
 import com.maple.common.util.MD5;
 import com.maple.core.pojo.dto.AdminDTO;
-import com.maple.core.pojo.dto.UserInfoDTO;
 import com.maple.core.pojo.entity.Admin;
 import com.maple.core.mapper.AdminMapper;
 import com.maple.core.pojo.entity.User;
@@ -92,7 +91,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         // 先获取最后一次登录记录
         UserLoginRecord lastUserLoginRecord = userLoginRecordService.getLastLoginRecord(admin.getId());
         //记录登录日志
-        userLoginRecordService.saveLoginRecord(admin.getId(),ip);
+        userLoginRecordService.saveLoginRecord(admin.getId(), admin.getUsername(), admin.getPhone(), ip);
         //生成token
         String token = JwtUtils.createToken(admin.getId(), admin.getUsername());
 

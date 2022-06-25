@@ -99,7 +99,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 先获取最后一次登录记录
         UserLoginRecord lastUserLoginRecord = userLoginRecordService.getLastLoginRecord(user.getId());
         //记录登录日志
-        userLoginRecordService.saveLoginRecord(user.getId(),ip);
+        userLoginRecordService.saveLoginRecord(user.getId(),user.getUsername(),user.getPhone(),ip);
         //生成token
         String token = JwtUtils.createToken(user.getId(), user.getUsername());
         //组装UserInfoDTO
