@@ -118,13 +118,13 @@ public class AdminController {
     @GetMapping("/userList/{page}/{limit}")
     public R getUserList(
             @ApiParam(value = "当前页码", required = true)
-            @PathVariable Long page,
+            @PathVariable("page") Long page,
 
             @ApiParam(value = "每页记录数", required = true)
-            @PathVariable Long limit,
+            @PathVariable("limit") Long limit,
 
             @ApiParam(value = "查询关键字", required = false)
-            @RequestParam String keyword){
+            @RequestParam("keyword") String keyword){
 
         Page<User> pageParam = new Page<>(page, limit);
         IPage<User> pageModel =  userService.listPage(pageParam, keyword);
@@ -135,13 +135,13 @@ public class AdminController {
     @GetMapping("/adminList/{page}/{limit}")
     public R getAdminList(
             @ApiParam(value = "当前页码", required = true)
-            @PathVariable Long page,
+            @PathVariable("page") Long page,
 
             @ApiParam(value = "每页记录数", required = true)
-            @PathVariable Long limit,
+            @PathVariable("limit") Long limit,
 
             @ApiParam(value = "查询关键字", required = false)
-            @RequestParam String keyword){
+            @RequestParam("keyword") String keyword){
 
         Page<Admin> pageParam = new Page<>(page, limit);
         IPage<Admin> pageModel =  adminService.listPage(pageParam, keyword);

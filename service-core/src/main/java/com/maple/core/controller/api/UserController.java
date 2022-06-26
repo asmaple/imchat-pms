@@ -115,9 +115,10 @@ public class UserController {
     @GetMapping("/refreshToken/{userId}/{userName}")
     public R refreshToken(
             @ApiParam(value = "用户ID", required = true)
-            @PathVariable String userId,
+            @PathVariable("userId") String userId,
             @ApiParam(value = "用户账号", required = true)
-            @PathVariable String userName,HttpServletRequest request) {
+            @PathVariable("userName") String userName,
+            HttpServletRequest request) {
 
         Assert.notEmpty(userId, ResponseEnum.AUTH_FAIL);
         Assert.notEmpty(userName, ResponseEnum.AUTH_FAIL);
