@@ -15,6 +15,14 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+
+  # 配置文件上传大小限制
+  servlet:
+    multipart:
+      enabled: true #开启文件上传
+      max-file-size: 10MB
+      max-request-size: 10MB
+
   redis:
 #    host: 192.168.100.100
     host: 127.0.0.1
@@ -40,6 +48,7 @@ mybatis-plus: #mybatis
 logging:
   level:
     root: info
+
 
 #minio 文件服务配置
 minio:

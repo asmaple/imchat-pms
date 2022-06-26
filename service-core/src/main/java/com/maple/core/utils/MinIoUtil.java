@@ -12,6 +12,7 @@ import io.minio.messages.DeleteObject;
 import io.minio.messages.Item;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+@Component
 @Slf4j
 public class MinIoUtil {
     public static final String SEPARATOR = "/";
