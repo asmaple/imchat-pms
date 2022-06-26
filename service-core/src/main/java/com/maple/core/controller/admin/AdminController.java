@@ -115,13 +115,13 @@ public class AdminController {
     }
 
     @ApiOperation("查询用户列表")
-    @GetMapping("/userList/{page}/{limit}")
+    @GetMapping("/userList")
     public R getUserList(
             @ApiParam(value = "当前页码", required = true)
-            @PathVariable("page") Long page,
+            @RequestParam("page") Long page,
 
             @ApiParam(value = "每页记录数", required = true)
-            @PathVariable("limit") Long limit,
+            @RequestParam("limit") Long limit,
 
             @ApiParam(value = "查询关键字", required = false)
             @RequestParam("keyword") String keyword){
@@ -132,13 +132,13 @@ public class AdminController {
     }
 
     @ApiOperation("查询管理员列表")
-    @GetMapping("/adminList/{page}/{limit}")
+    @GetMapping("/adminList")
     public R getAdminList(
             @ApiParam(value = "当前页码", required = true)
-            @PathVariable("page") Long page,
+            @RequestParam("page") Long page,
 
             @ApiParam(value = "每页记录数", required = true)
-            @PathVariable("limit") Long limit,
+            @RequestParam("limit") Long limit,
 
             @ApiParam(value = "查询关键字", required = false)
             @RequestParam("keyword") String keyword){
@@ -150,12 +150,13 @@ public class AdminController {
 
 
     @ApiOperation("锁定和解锁用户")
-    @PostMapping("/lockUser/{userId}/{status}")
+    @PostMapping("/lockUser")
     public R lockUser(
             @ApiParam(value = "用户ID", required = true)
-            @PathVariable String userId,
+            @RequestParam String userId,
             @ApiParam(value = "用户状态(0:解锁,1:锁定)", required = true)
-            @PathVariable String status, HttpServletRequest request) {
+            @RequestParam String status,
+            HttpServletRequest request) {
 
         Assert.notEmpty(userId, ResponseEnum.PARAMETER_ERROR);
         Assert.notEmpty(status, ResponseEnum.PARAMETER_ERROR);
@@ -188,10 +189,10 @@ public class AdminController {
 
 
     @ApiOperation("删除用户")
-    @PostMapping("/deleteUserById/{userId}")
+    @PostMapping("/deleteUserById")
     public R deleteUserById(
             @ApiParam(value = "用户Id", required = true)
-            @PathVariable String userId,
+            @RequestParam String userId,
             HttpServletRequest request){
 
         Assert.notEmpty(userId, ResponseEnum.PARAMETER_ERROR);

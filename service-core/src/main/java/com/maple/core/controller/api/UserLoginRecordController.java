@@ -34,13 +34,13 @@ public class UserLoginRecordController {
     private UserLoginRecordService userLoginRecordService;
 
     @ApiOperation("查询用户登录记录列表")
-    @GetMapping("/list/{page}/{limit}")
+    @GetMapping("/list")
     public R getUserList(
             @ApiParam(value = "当前页码", required = true)
-            @PathVariable("page") Long page,
+            @RequestParam("page") Long page,
 
             @ApiParam(value = "每页记录数", required = true)
-            @PathVariable("limit") Long limit,
+            @RequestParam("limit") Long limit,
 
             @ApiParam(value = "查询关键字", required = false)
             @RequestParam("keyword") String keyword){

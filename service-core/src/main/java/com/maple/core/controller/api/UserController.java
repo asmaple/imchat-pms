@@ -46,7 +46,9 @@ public class UserController {
 
     @ApiOperation("测试")
     @GetMapping("/hello")
-    public R hello() {
+    public R hello(
+      @ApiParam(value = "参数", required = true)
+      @RequestParam("test") String test) {
         return R.ok();
     }
 
@@ -112,12 +114,12 @@ public class UserController {
     }
 
     @ApiOperation("刷新令牌")
-    @GetMapping("/refreshToken/{userId}/{userName}")
+    @GetMapping("/refreshToken")
     public R refreshToken(
             @ApiParam(value = "用户ID", required = true)
-            @PathVariable("userId") String userId,
+            @RequestParam("userId") String userId,
             @ApiParam(value = "用户账号", required = true)
-            @PathVariable("userName") String userName,
+            @RequestParam("userName") String userName,
             HttpServletRequest request) {
 
         Assert.notEmpty(userId, ResponseEnum.AUTH_FAIL);
