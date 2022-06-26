@@ -31,6 +31,9 @@ public class MinIoUtil {
     public static final String SEPARATOR = "/";
 
 
+    public static final String BUCKE_TNAME = "imchat";
+
+
     @Resource
     private CustomMinIoClient customMinIoClient;
     

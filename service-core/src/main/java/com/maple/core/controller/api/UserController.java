@@ -2,24 +2,33 @@ package com.maple.core.controller.api;
 
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.maple.base.enums.FileType;
 import com.maple.base.pojo.to.UserClaims;
 import com.maple.base.util.JwtUtils;
 import com.maple.common.exception.Assert;
 import com.maple.common.result.R;
 import com.maple.common.result.ResponseEnum;
 import com.maple.common.util.RegexValidateUtils;
+import com.maple.core.controller.admin.FileInfoController;
+import com.maple.core.pojo.dto.FileDTO;
 import com.maple.core.pojo.dto.UserInfoDTO;
+import com.maple.core.pojo.entity.Admin;
+import com.maple.core.pojo.entity.FileInfo;
 import com.maple.core.pojo.entity.User;
+import com.maple.core.pojo.entity.UserInfo;
 import com.maple.core.pojo.vo.LoginVO;
 import com.maple.core.pojo.vo.RegisterVO;
+import com.maple.core.service.FileInfoService;
 import com.maple.core.service.UserInfoService;
 import com.maple.core.service.UserService;
+import com.maple.core.utils.MinIoUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -43,6 +52,9 @@ public class UserController {
 
     @Resource
     private UserInfoService userInfoService;
+
+    @Resource
+    private FileInfoService fileInfoService;
 
     @ApiOperation("测试")
     @GetMapping("/hello")
@@ -147,6 +159,82 @@ public class UserController {
         return R.error();
     }
 
+
+
+    @ApiOperation("用戶上传图片")
+    @PostMapping("/uploadImage")
+    @ResponseBody
+    public R uploadImage(
+        @ApiParam(value= "文件", required = true)
+        @RequestParam("file") MultipartFile file,
+        @ApiParam(value = "文件类型", required = true)
+        @RequestParam("fileType") String fileType,
+        HttpServletRequest request){
+
+        Assert.notEmpty(fileType, ResponseEnum.PARAMETER_ERROR);
+
+        //获取当前登录用户的id
+        String token = request.getHeader("token");
+        Long userId = JwtUtils.getUserId(token);
+        log.info("----uploadImage--->>>{}",userId);
+        User user = userService.getById(userId);
+        Assert.notNull(user,ResponseEnum.ACCOUNT_NOT_FOUNT);
+
+        if(fileType.equals(FileType.AVATAR.getType())) { // 头像
+            FileDTO fileDTO = fileInfoService.uploadFile(file, MinIoUtil.BUCKE_TNAME,"user");
+            if(fileDTO != null){
+                // 更新头像
+                UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
+                // 只更新部分字段
+                updateWrapper
+                        .eq("id",userId)
+                        .set("avatar_url",fileDTO.getFileUrl());
+                boolean result =  userService.update(null,updateWrapper);
+                if(result) {
+                    return R.ok().data("fileUrl",fileDTO.getFileUrl()).message("文件上传成功");
+                }
+            }
+        } else if(fileType.equals(FileType.ID_FRONT.getType())) { // 身份证人物照
+            FileDTO fileDTO = fileInfoService.uploadFile(file, MinIoUtil.BUCKE_TNAME,"user");
+            if(fileDTO != null){
+                // 更新头像
+                UpdateWrapper<UserInfo> updateWrapper = new UpdateWrapper<>();
+                // 只更新部分字段
+                updateWrapper
+                        .eq("user_id",userId)
+                        .set("front_url",fileDTO.getFileUrl());
+                boolean result =  userInfoService.update(null,updateWrapper);
+                if(result) {
+                    return R.ok().data("fileUrl",fileDTO.getFileUrl()).message("文件上传成功");
+                }
+            }
+        } else if(fileType.equals(FileType.ID_BACK.getType())) { // 身份证国徽照
+            FileDTO fileDTO = fileInfoService.uploadFile(file, MinIoUtil.BUCKE_TNAME,"user");
+            if(fileDTO != null){
+                // 更新头像
+                UpdateWrapper<UserInfo> updateWrapper = new UpdateWrapper<>();
+                // 只更新部分字段
+                updateWrapper
+                        .eq("user_id",userId)
+                        .set("back_url",fileDTO.getFileUrl());
+                boolean result =  userInfoService.update(null,updateWrapper);
+                if(result) {
+                    return R.ok().data("fileUrl",fileDTO.getFileUrl()).message("文件上传成功");
+                }
+            }
+        } else {
+            // 上传图片类型错误
+            return R.error().message("上传图片类型错误!");
+
+        }
+
+
+
+
+
+
+        return R.error();
+    }
 
     @ApiOperation("用户退出")
     @PostMapping("/logout")

@@ -170,6 +170,8 @@ public class AdminController {
 
         // 用户被锁定
         Assert.equals(admin.getStatus(), User.STATUS_NORMAL, ResponseEnum.LOGIN_LOKED_ERROR);
+        // 无权限
+        Assert.isTrue((admin.getRoleCode().intValue() == Admin.ROLE_ADMIN.intValue() || admin.getRoleCode().intValue() == Admin.ROLE_ROOT.intValue()), ResponseEnum.ROLE_NOT_PERMISSION);
 
         if(StringUtils.equals(status,"0") || StringUtils.equals(status,"1")) {
             UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
