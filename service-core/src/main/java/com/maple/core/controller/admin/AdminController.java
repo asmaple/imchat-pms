@@ -218,6 +218,7 @@ public class AdminController {
 
     @ApiOperation("用户退出")
     @PostMapping("/logout")
+    @ResponseBody
     public R logout() {
         return R.ok();
     }
