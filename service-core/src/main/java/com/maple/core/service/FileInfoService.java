@@ -1,5 +1,6 @@
 package com.maple.core.service;
 
+import com.maple.core.pojo.dto.AppDTO;
 import com.maple.core.pojo.dto.FileDTO;
 import com.maple.core.pojo.entity.FileInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -28,5 +29,7 @@ public interface FileInfoService extends IService<FileInfo> {
     boolean removeBucket(String bucketName);
 
     boolean downloadFile(HttpServletResponse httpServletResponse, String bucketName, String fileName);
+
+    AppDTO uploadApp(MultipartFile file, String bucketName, String app);
 
 }

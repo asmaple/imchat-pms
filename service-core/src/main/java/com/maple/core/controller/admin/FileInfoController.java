@@ -63,7 +63,7 @@ public class FileInfoController {
             @ApiParam(value = "模块名", required = true)
             @RequestParam("moduleName") String moduleName) {
 
-        FileDTO fileDTO = fileInfoService.uploadFile(file, MinIoUtil.BUCKE_TNAME,moduleName);
+        FileDTO fileDTO = fileInfoService.uploadFile(file, MinIoUtil.BUCKET_NAME,moduleName);
         if(fileDTO != null){
             return R.ok().data("fileInfo",fileDTO).message("文件上传成功");
         }
@@ -83,7 +83,7 @@ public class FileInfoController {
 //                         @RequestParam("bucketName") String bucketName,
                          @ApiParam(value = "文件名(objectName)", required = true)
                          @RequestParam("fileName") String fileName) {
-        boolean result = fileInfoService.downloadFile(httpServletResponse, MinIoUtil.BUCKE_TNAME,fileName);
+        boolean result = fileInfoService.downloadFile(httpServletResponse, MinIoUtil.BUCKET_NAME,fileName);
         log.info("=====文件下载结果=====>>>" + result);
     }
 
@@ -95,7 +95,7 @@ public class FileInfoController {
 //            @RequestParam("bucketName") String bucketName,
             @ApiParam(value = "文件名(objectName)", required = true)
             @RequestParam("fileName") String fileName) {
-        boolean result = fileInfoService.removeFile(MinIoUtil.BUCKE_TNAME,fileName);
+        boolean result = fileInfoService.removeFile(MinIoUtil.BUCKET_NAME,fileName);
         return result? R.ok(): R.error();
     }
 
@@ -110,7 +110,7 @@ public class FileInfoController {
 //        String[] strArray = {"aaa","bbb","ccc"}；
 //        String str= StringUtils.join(strArry,",");
 //        System.out.println(str);
-        boolean result = fileInfoService.removeFiles(MinIoUtil.BUCKE_TNAME,keys);
+        boolean result = fileInfoService.removeFiles(MinIoUtil.BUCKET_NAME,keys);
         return result? R.ok(): R.error();
     }
 

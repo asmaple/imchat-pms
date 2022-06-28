@@ -1,5 +1,6 @@
 package com.maple.core.service;
 
+import com.maple.core.pojo.dto.AppDTO;
 import com.maple.core.pojo.entity.AppInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,4 +14,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface AppInfoService extends IService<AppInfo> {
 
+    AppInfo getAppInfoByPackageName(String appId, String appType);
+
+    boolean saveAppInfo(AppDTO appDTO);
 }

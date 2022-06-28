@@ -31,7 +31,7 @@ public class MinIoUtil {
     public static final String SEPARATOR = "/";
 
 
-    public static final String BUCKE_TNAME = "imchat";
+    public static final String BUCKET_NAME = "imchat";
 
 
     @Resource
@@ -88,6 +88,7 @@ public class MinIoUtil {
                 .fileType(fileType)
                 .fileSize(fileSize)
                 .moduleName(moduleName)
+                .encryptKey("maple")
                 .build();
     }
 

@@ -3,6 +3,7 @@ package com.maple.core.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import com.maple.common.exception.Assert;
 import com.maple.common.result.ResponseEnum;
+import com.maple.core.pojo.dto.AppDTO;
 import com.maple.core.pojo.dto.FileDTO;
 import com.maple.core.pojo.entity.FileInfo;
 import com.maple.core.mapper.FileInfoMapper;
@@ -120,6 +121,31 @@ public class FileInfoServiceImpl extends ServiceImpl<FileInfoMapper, FileInfo> i
         Assert.notEmpty(bucketName, ResponseEnum.DOWNLOAD_ERROR);
         Assert.notEmpty(fileName, ResponseEnum.DOWNLOAD_ERROR);
         return minIoUtil.downloadFile(httpServletResponse, bucketName, fileName);
+    }
+
+    @Override
+    public AppDTO uploadApp(MultipartFile file, String bucketName, String app) {
+
+        Assert.notNull(file, ResponseEnum.UPLOAD_ERROR);
+        try {
+            FileDTO fileDTO = minIoUtil.uploadFile(file, bucketName,app);
+            // 插入到数据库中
+            if(fileDTO != null){
+                FileInfo fileInfo = new FileInfo();
+                BeanUtil.copyProperties(fileDTO,fileInfo);
+                int count = baseMapper.insert(fileInfo);
+                if(count > 0){
+                    return AppDTO.builder()
+                            .fileInfoId(fileInfo.getId())
+                            .downloadUrl(fileInfo.getFileUrl())
+                            .build();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("=======uploadApp======>>>" + e.getMessage());
+        }
+        return null;
     }
 
 

@@ -181,7 +181,7 @@ public class UserController {
         Assert.notNull(user,ResponseEnum.ACCOUNT_NOT_FOUNT);
 
         if(fileType.equals(FileType.AVATAR.getType())) { // 头像
-            FileDTO fileDTO = fileInfoService.uploadFile(file, MinIoUtil.BUCKE_TNAME,"user");
+            FileDTO fileDTO = fileInfoService.uploadFile(file, MinIoUtil.BUCKET_NAME,"user");
             if(fileDTO != null){
                 // 更新头像
                 UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
@@ -195,7 +195,7 @@ public class UserController {
                 }
             }
         } else if(fileType.equals(FileType.ID_FRONT.getType())) { // 身份证人物照
-            FileDTO fileDTO = fileInfoService.uploadFile(file, MinIoUtil.BUCKE_TNAME,"user");
+            FileDTO fileDTO = fileInfoService.uploadFile(file, MinIoUtil.BUCKET_NAME,"user");
             if(fileDTO != null){
                 // 更新头像
                 UpdateWrapper<UserInfo> updateWrapper = new UpdateWrapper<>();
@@ -209,7 +209,7 @@ public class UserController {
                 }
             }
         } else if(fileType.equals(FileType.ID_BACK.getType())) { // 身份证国徽照
-            FileDTO fileDTO = fileInfoService.uploadFile(file, MinIoUtil.BUCKE_TNAME,"user");
+            FileDTO fileDTO = fileInfoService.uploadFile(file, MinIoUtil.BUCKET_NAME,"user");
             if(fileDTO != null){
                 // 更新头像
                 UpdateWrapper<UserInfo> updateWrapper = new UpdateWrapper<>();
