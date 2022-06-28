@@ -8,6 +8,7 @@ import com.maple.base.util.JwtUtils;
 import com.maple.common.exception.Assert;
 import com.maple.common.result.R;
 import com.maple.common.result.ResponseEnum;
+import com.maple.common.util.MD5;
 import com.maple.common.util.RegexValidateUtils;
 import com.maple.core.controller.admin.FileInfoController;
 import com.maple.core.pojo.dto.FileDTO;
@@ -227,14 +228,49 @@ public class UserController {
             return R.error().message("上传图片类型错误!");
 
         }
-
-
-
-
-
-
         return R.error();
     }
+
+
+    @ApiOperation("重置密码")
+    @PostMapping("/resetPassword")
+    @ResponseBody
+    public R updatePassword(
+            @ApiParam(value = "旧密码", required = true)
+            @RequestParam("oldPassword") String oldPassword,
+            @ApiParam(value = "新密码", required = true)
+            @RequestParam("newPassword") String newPassword,
+            HttpServletRequest request){
+
+        Assert.notEmpty(oldPassword, ResponseEnum.PARAMETER_ERROR);
+        Assert.notEmpty(newPassword, ResponseEnum.PARAMETER_ERROR);
+
+        // 校验新密码格式
+        Assert.isTrue(RegexValidateUtils.checkPassword(newPassword), ResponseEnum.PASSWORD_ERROR);
+
+        //获取当前登录用户的id
+        String token = request.getHeader("token");
+        Long userId = JwtUtils.getUserId(token);
+        log.info("----uploadImage--->>>{}",userId);
+
+        User user = userService.getById(userId);
+        Assert.notNull(user,ResponseEnum.ACCOUNT_NOT_FOUNT);
+
+        if(!StringUtils.equals(user.getPassword(), MD5.encrypt(oldPassword))) {
+            return R.error().message("您输入的密码不正确！");
+        }
+
+        UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
+        updateWrapper
+                .eq("id",userId)
+                .set("password",newPassword);
+        boolean result =  userService.update(null,updateWrapper);
+        if(result) {
+            return R.ok().message("修改成功！");
+        }
+        return R.error();
+    }
+
 
     @ApiOperation("用户退出")
     @PostMapping("/logout")
