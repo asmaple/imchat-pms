@@ -1,15 +1,19 @@
 package com.maple.core.controller.api;
 
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.maple.common.exception.Assert;
 import com.maple.common.result.R;
 import com.maple.common.result.ResponseEnum;
 import com.maple.core.pojo.dto.AppDTO;
 import com.maple.core.pojo.entity.AppInfo;
 import com.maple.core.pojo.entity.FileInfo;
+import com.maple.core.pojo.entity.User;
 import com.maple.core.service.AppInfoService;
 import com.maple.core.service.FileInfoService;
 import com.maple.core.utils.MinIoUtil;
+import com.maple.core.utils.PageUtils;
 import io.netty.util.internal.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,8 +40,26 @@ public class AppInfoController {
 
     @Resource
     private AppInfoService appInfoService;
+
     @Resource
     private FileInfoService fileInfoService;
+
+    @ApiOperation("查询应用列表")
+    @GetMapping("/appList")
+    public R getAppList(
+            @ApiParam(value = "当前页码", required = true)
+            @RequestParam("page") Long page,
+
+            @ApiParam(value = "每页记录数", required = true)
+            @RequestParam("limit") Long limit,
+
+            @ApiParam(value = "查询关键字", required = false)
+            @RequestParam("keyword") String keyword){
+
+        Page<AppInfo> pageParam = new Page<>(page, limit);
+        IPage<AppInfo> pageModel =  appInfoService.listPage(pageParam, keyword);
+        return PageUtils.page(pageModel);
+    }
 
 
     @ApiOperation("根据包名获取APP信息")
@@ -45,6 +67,7 @@ public class AppInfoController {
     public R checkAppVersion(
             @ApiParam(value = "应用包名",required = true)
             @RequestParam("appId") String appId,
+
             @ApiParam(value = "APP类型（0：Android  1：IOS）",required = true)
             @RequestParam("appType") String appType){
 

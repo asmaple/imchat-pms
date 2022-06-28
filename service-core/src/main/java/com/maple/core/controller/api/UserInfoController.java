@@ -40,7 +40,7 @@ public class UserInfoController {
     private UserInfoService userInfoService;
 
     @ApiOperation("查询用户信息")
-    @GetMapping("/getUserInfo")
+    @GetMapping("/userInfo")
     public R getUserInfo(HttpServletRequest request) {
         //获取当前登录用户的id
         String token = request.getHeader("token");

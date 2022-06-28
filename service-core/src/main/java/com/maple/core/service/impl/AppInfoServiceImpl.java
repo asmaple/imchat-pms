@@ -2,7 +2,11 @@ package com.maple.core.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.maple.core.pojo.dto.AppDTO;
+import com.maple.core.pojo.entity.Admin;
 import com.maple.core.pojo.entity.AppInfo;
 import com.maple.core.mapper.AppInfoMapper;
 import com.maple.core.service.AppInfoService;
@@ -40,5 +44,17 @@ public class AppInfoServiceImpl extends ServiceImpl<AppInfoMapper, AppInfo> impl
         BeanUtil.copyProperties(appDTO,appInfo);
         int count = baseMapper.insert(appInfo);
         return count > 0;
+    }
+
+    @Override
+    public IPage<AppInfo> listPage(Page<AppInfo> pageParam, String keyword) {
+        if(StringUtils.isBlank(keyword)){
+            return baseMapper.selectPage(pageParam, null);
+        }
+
+        QueryWrapper<AppInfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByDesc("version_code");
+
+        return baseMapper.selectPage(pageParam, queryWrapper);
     }
 }
