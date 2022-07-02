@@ -21,4 +21,6 @@ public interface AppInfoService extends IService<AppInfo> {
     boolean saveAppInfo(AppDTO appDTO);
 
     IPage<AppInfo> listPage(Page<AppInfo> pageParam, String keyword);
+
+    AppInfo getAppBsDiffByPackageName(String appId, String versionCode, String diffCode);
 }

@@ -20,6 +20,8 @@ public class AppDTO {
 
     private Integer versionCode;
 
+    private String diffCode;
+
     private String versionName;
 
     private String updateContent;

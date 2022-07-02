@@ -38,6 +38,20 @@ public class AppInfoServiceImpl extends ServiceImpl<AppInfoMapper, AppInfo> impl
         return appInfo;
     }
 
+
+    @Override
+    public AppInfo getAppBsDiffByPackageName(String appId, String versionCode, String diffCode) {
+        QueryWrapper<AppInfo> appInfoQueryWrapper = new QueryWrapper<>();
+        appInfoQueryWrapper
+                .eq("app_id", appId)
+                .eq("type","2")
+                .eq("diff_code",diffCode)
+                .orderByDesc("version_code")
+                .last("limit 1");
+        AppInfo appInfo = baseMapper.selectOne(appInfoQueryWrapper);
+        return appInfo;
+    }
+
     @Override
     public boolean saveAppInfo(AppDTO appDTO) {
         AppInfo appInfo = new AppInfo();
@@ -57,4 +71,5 @@ public class AppInfoServiceImpl extends ServiceImpl<AppInfoMapper, AppInfo> impl
 
         return baseMapper.selectPage(pageParam, queryWrapper);
     }
+
 }

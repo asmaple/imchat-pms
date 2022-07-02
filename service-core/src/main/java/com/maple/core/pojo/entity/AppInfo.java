@@ -47,6 +47,9 @@ public class AppInfo implements Serializable {
     @ApiModelProperty(value = "版本号")
     private Integer versionCode;
 
+    @ApiModelProperty(value = "差分包号")
+    private String diffCode;
+
     @ApiModelProperty(value = "版本名")
     private String versionName;
 
