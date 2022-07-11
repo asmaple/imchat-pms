@@ -14,6 +14,7 @@ public class PageUtils {
      * @return 返回包装过的分页数据
      */
     public static <T> R page(IPage<T> pageModel)  {
+//            PageHelper.getStart(new Long(pageModel.getCurrent()).intValue(),new Long(pageModel.getSize()).intValue());
         return R.ok().data("list",pageModel.getRecords()).data("current",pageModel.getCurrent()).data("size",pageModel.getSize()).data("pages",pageModel.getPages()).data("total",pageModel.getTotal());
     }
 }

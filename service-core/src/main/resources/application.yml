@@ -55,7 +55,7 @@ minio:
   enable: true  # 必须配置 true
   enableHttps: false # 是否使用https
   #  endpoint: http://192.168.50.249:9000
-  endpoint: http://192.168.1.84:9000
+  endpoint: http://10.168.1.211:9000
   #  endpoint: http://192.168.0.104:9000
   accessKey: minioadmin
   secretKey: minioadmin
