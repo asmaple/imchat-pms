@@ -62,7 +62,7 @@ public class UserController {
     public R hello(
       @ApiParam(value = "参数", required = true)
       @RequestParam("test") String test) {
-        return R.ok();
+        return R.ok().data("test",test);
     }
 
 
