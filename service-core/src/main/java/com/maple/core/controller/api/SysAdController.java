@@ -87,7 +87,7 @@ public class SysAdController {
 
         Page<SysAd> pageParam = new Page<>(page, limit);
         IPage<SysAd> pageModel =  sysAdService.listPage(pageParam, keyword, type);
-        return PageUtils.page(pageModel);
+        return PageUtils.page(page,pageModel);
     }
 
 }

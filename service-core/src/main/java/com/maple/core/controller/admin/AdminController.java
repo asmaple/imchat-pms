@@ -128,7 +128,7 @@ public class AdminController {
 
         Page<User> pageParam = new Page<>(page, limit);
         IPage<User> pageModel =  userService.listPage(pageParam, keyword);
-        return PageUtils.page(pageModel);
+        return PageUtils.page(page,pageModel);
     }
 
     @ApiOperation("查询管理员列表")
@@ -145,7 +145,7 @@ public class AdminController {
 
         Page<Admin> pageParam = new Page<>(page, limit);
         IPage<Admin> pageModel =  adminService.listPage(pageParam, keyword);
-        return PageUtils.page(pageModel);
+        return PageUtils.page(page,pageModel);
     }
 
 

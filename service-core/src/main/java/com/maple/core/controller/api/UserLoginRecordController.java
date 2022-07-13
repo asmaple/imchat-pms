@@ -47,7 +47,7 @@ public class UserLoginRecordController {
 
         Page<UserLoginRecord> pageParam = new Page<>(page, limit);
         IPage<UserLoginRecord> pageModel =  userLoginRecordService.listPage(pageParam, keyword);
-        return PageUtils.page(pageModel);
+        return PageUtils.page(page,pageModel);
     }
 }
 

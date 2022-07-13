@@ -59,7 +59,7 @@ public class AppInfoController {
 
         Page<AppInfo> pageParam = new Page<>(page, limit);
         IPage<AppInfo> pageModel =  appInfoService.listPage(pageParam, keyword);
-        return PageUtils.page(pageModel);
+        return PageUtils.page(page,pageModel);
     }
 
 
